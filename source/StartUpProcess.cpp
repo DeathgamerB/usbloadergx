@@ -195,54 +195,8 @@ void StartUpProcess::SetTextf(const char *format, ...)
 
 bool StartUpProcess::USBSpinUp()
 {
-	drawCancel = true;
-	Timer countDown;
-	bool started0 = false;
-	bool started1 = false;
-
-	const DISC_INTERFACE *handle0 = NULL;
-	const DISC_INTERFACE *handle1 = NULL;
-	if (Settings.USBPort == 0 || Settings.USBPort == 2)
-		handle0 = DeviceHandler::GetUSB0Interface();
-	if (Settings.USBPort == 1 || Settings.USBPort == 2)
-		handle1 = DeviceHandler::GetUSB1Interface();
-
-	// wait 20 sec for the USB to spin up...stupid slow ass HDD
-	do
-	{
-		if (handle0)
-			started0 = (handle0->startup() && handle0->isInserted());
-
-		if (handle1)
-			started1 = (handle1->startup() && handle1->isInserted());
-
-		if ((!handle0 || started0) && (!handle1 || started1))
-			break;
-
-		UpdatePads();
-		for (int i = 0; i < 4; ++i)
-		{
-			cancelBtn->Update(&userInput[i]);
-			sdmodeBtn->Update(&userInput[i]);
-		}
-
-		if (cancelBtn->GetState() == STATE_CLICKED)
-			break;
-
-		if (sdmodeBtn->GetState() == STATE_CLICKED)
-		{
-			Settings.SDMode = ON;
-			break;
-		}
-
-		messageTxt->SetTextf("Waiting for USB devices: %i sec left\n", 1 - (int)countDown.elapsed());
-		Draw();
-		usleep(50000);
-	} while (countDown.elapsed() < 1.0f);
-
-	drawCancel = false;
-
-	return (started0 || started1);
+	Settings.SDMode = ON;
+	return false;
 }
 
 int StartUpProcess::Run(int argc, char *argv[])
