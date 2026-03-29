@@ -235,10 +235,10 @@ bool StartUpProcess::USBSpinUp()
 			break;
 		}
 
-		messageTxt->SetTextf("Waiting for USB devices: %i sec left\n", 20 - (int)countDown.elapsed());
+		messageTxt->SetTextf("Waiting for USB devices: %i sec left\n", 1 - (int)countDown.elapsed());
 		Draw();
 		usleep(50000);
-	} while (countDown.elapsed() < 20.f);
+	} while (countDown.elapsed() < 1.0f);
 
 	drawCancel = false;
 
